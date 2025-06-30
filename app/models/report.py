@@ -11,7 +11,7 @@ class ReportStatus(Enum):
     FAILED="FAILED"
 
 class Report(Base):
-    __tablename__ = "USERS"
+    __tablename__ = "REPORTS"
 
     id = Column("ID", Integer, primary_key=True, index=True)
     title = Column("TITLE", String, unique=True, index=True)
