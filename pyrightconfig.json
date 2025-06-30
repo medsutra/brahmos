@@ -1,0 +1,11 @@
+{
+ "include": ["."], 
+  "exclude": ["**/__pycache__", "env"],
+  "venvPath": ".",
+  "venv": "env",
+  "pythonVersion": "3.10",
+  "pythonPath": "env/bin/python",
+  "extraPaths": [
+    "./app" 
+  ]
+}

@@ -1,0 +1,16 @@
+from pydantic import BaseModel, EmailStr
+
+class UserBase(BaseModel):
+    email: EmailStr
+
+class UserCreate(UserBase):
+    password: str
+
+class User(UserBase):
+    id: int
+    is_active: bool
+    items: list = [] # List of Item schemas for relationships (forward reference)
+
+    class Config:
+        orm_mode = True # Enables ORM mode for Pydantic to work with SQLAlchemy models
+        from_attributes = True # Pydantic v2+ equivalent of orm_mode
