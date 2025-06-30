@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, File, UploadFile, status
 from sqlalchemy.orm import Session
 
+from app.models.report import Report
+
 from ..database import get_db
 from ..services.report import ReportService
 
@@ -10,10 +12,11 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+
 @router.post("/upload", status_code=status.HTTP_201_CREATED)
 async def upload_report(
     uploaded_file: UploadFile = File(..., media_type="image/jpeg"),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """
     Uploads a report file.
@@ -26,5 +29,3 @@ async def upload_report(
         db=db,
         file=uploaded_file,
     )
-
-    

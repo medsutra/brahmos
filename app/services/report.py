@@ -28,11 +28,6 @@ class ReportService:
         report: Report,
         db: Session,
     ) -> Optional[MedicalReportAnalysis]:
-        """
-        Sends a medical report image to Google Generative AI for analysis.
-        Instructs AI to create a summary and title in JSON format via the prompt.
-        Parses and validates the JSON response.
-        """
         logger.info(
             f"Initiating AI analysis for medical report using model: {genai_model_name}"
         )
@@ -60,7 +55,7 @@ class ReportService:
             def blocking_ai_call():
                 return genai_client.models.generate_content(
                     model=genai_model_name,
-                    contents=[{"text": prompt}, image_data],
+                    contents=[prompt, image_data],
                 )
 
             response = await run_in_threadpool(blocking_ai_call)
@@ -72,6 +67,13 @@ class ReportService:
                 and response.candidates[0].content.parts
             ):
                 raw_gemini_text = response.candidates[0].content.parts[0].text
+
+                if not raw_gemini_text:
+                    logger.error(
+                        "Gemini AI response is None. No content received for analysis."
+                    )
+                    return None
+
                 logger.info(
                     f"Gemini AI analysis raw response (first 200 chars): {raw_gemini_text[:200]}..."
                 )
@@ -116,19 +118,11 @@ class ReportService:
             )
 
     @classmethod
-    async def upload_report(cls, db: Session, file: UploadFile) -> None:
-        """
-        Reads the content of an UploadFile and saves it as a BLOB in the database.
-        Performs basic validation to ensure the file type is JPEG/JPG.
-        """
+    async def upload_report(cls, db: Session, file: UploadFile) -> Report:
         file_content = await file.read()
 
         if file.content_type not in ["image/jpeg", "image/jpg"]:
             raise ValueError("Invalid file type. Only JPEG/JPG images are allowed.")
-
-        logger.info(
-            f"Received file for upload: {file.filename}, size: {len(file_content)} bytes"
-        )
 
         image = Image.open(BytesIO(file_content))
 
@@ -145,4 +139,4 @@ class ReportService:
             db=db,
         )
 
-        return None
+        return report
