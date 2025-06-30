@@ -1,12 +1,11 @@
-
-
-from models.report import Report
+from app.query_models.report import ReportStatus
+from ..models.report import Report
 
 
 class ReportRepository:
 
     @classmethod
-    def add_report(cls, db, report):
+    def add_report(cls, db, user_id):
         """
         Adds a new report to the database.
 
@@ -14,6 +13,12 @@ class ReportRepository:
         :param report: The report object to be added.
         :return: The added report object.
         """
+
+        report = Report(
+            status=ReportStatus.PROCESSING,
+            user_id=user_id,
+        )
+
         db.add(report)
         db.commit()
         db.refresh(report)
@@ -40,6 +45,31 @@ class ReportRepository:
         :return: A list of report objects for the specified user.
         """
         return db.query(Report).filter(Report.user_id == user_id).all()
+
+    @classmethod
+    def populate_report(
+        cls, db, report_id, title, description, status=ReportStatus.PROCESSING
+    ):
+        """
+        Populates a report with the given details.
+
+        :param db: The database session.
+        :param report_id: The ID of the report to populate.
+        :param
+        title: The title of the report.
+        :param description: The description of the report.
+        :param status: The status of the report (default is PROCESSING).
+        :return: The updated report object if found, otherwise None.
+        """
+        report = cls.get_report_by_id(db, report_id)
+        if report:
+            report.title = title
+            report.description = description
+            report.status = status
+            db.commit()
+            db.refresh(report)
+            return report
+        return None
 
     @classmethod
     def update_report_status(cls, db, report_id, status):
