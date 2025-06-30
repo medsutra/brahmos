@@ -72,6 +72,7 @@ class ReportService:
                     logger.error(
                         "Gemini AI response is None. No content received for analysis."
                     )
+                    ReportRepository.set_report_failed(db=db, report_id=report.id)
                     return None
 
                 logger.info(
@@ -111,11 +112,13 @@ class ReportService:
                 logger.warning(
                     "No valid response candidates or content received from Gemini for image analysis."
                 )
+                ReportRepository.set_report_failed(db=db, report_id=report.id)
         except Exception as e:
             logger.error(
                 f"An unexpected error occurred during Gemini AI analysis: {e}",
                 exc_info=True,
             )
+            ReportRepository.set_report_failed(db=db, report_id=report.id)
 
     @classmethod
     async def upload_report(cls, db: Session, file: UploadFile) -> Report:
