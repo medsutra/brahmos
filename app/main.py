@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from .controllers.report import router as report_router
+from .routes.report import router as report_router
 from .database import Base, engine
 
 Base.metadata.create_all(bind=engine)
