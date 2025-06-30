@@ -1,6 +1,6 @@
 # MedSutra Backend
 
-This repository contains the backend services for the MedSutra application, built with FastAPI and leveraging the Google GenAI SDK for intelligent processing of health reports.
+This repository contains the backend services for the MedSutra application, built with FastAPI and leveraging AI for intelligent processing of health reports.
 
 ## Getting Started
 
@@ -56,9 +56,3 @@ Follow these steps to set up and run the backend locally.
     http://localhost:8000/docs
     ```
     This interface allows you to explore available endpoints, test them, and understand the request/response schemas.
-
-### Technology Stack
-
-* **Web Framework:** FastAPI
-* **AI Integration:** Google GenAI SDK
-* **ASGI Server:** Uvicorn
