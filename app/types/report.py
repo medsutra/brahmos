@@ -19,3 +19,7 @@ class MedicalReportAnalysis(BaseModel):
         ...,
         description="Immediate actions or treatments recommended based on the report's findings.",
     )
+    vector_data: str = Field(
+        ...,
+        description="Vector data representation of the medical report, used for similarity search and retrieval.",
+    )
