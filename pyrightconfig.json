@@ -1,0 +1,11 @@
+{
+  "venvPath": ".",
+  "venv": "env",
+  "pythonVersion": "3.13",
+  "typeCheckingMode": "basic",
+  "include": ["app"],
+  "exclude": ["**/__pycache__", "**/.git"],
+  "reportMissingTypeStubs": "none",
+  "reportUnknownMemberType": "none",
+  "reportUnknownVariableType": "none"
+}
