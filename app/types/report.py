@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, Field
 
 
@@ -23,3 +24,4 @@ class MedicalReportAnalysis(BaseModel):
         ...,
         description="Vector data representation of the medical report, used for similarity search and retrieval.",
     )
+    user_id: Optional[str] = None

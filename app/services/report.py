@@ -8,10 +8,12 @@ from sqlalchemy.orm import Session
 from fastapi import UploadFile
 from fastapi.logger import logger
 from app.config import settings
-from app.models.report import Report
+from app.schemas.report import Report
 from app.query_models.report import ReportStatus
 from app.repositories.report import ReportRepository
+from app.services.doctor_agent import DoctorAgent
 from app.types.report import MedicalReportAnalysis
+from .vector_storage import vector_storage_service
 
 
 class ReportService:
@@ -73,7 +75,7 @@ class ReportService:
         try:
 
             def blocking_ai_call():
-                pass
+                return DoctorAgent.analyze_report(image_data=image_data)
 
             response = await run_in_threadpool(blocking_ai_call)
 
@@ -109,12 +111,17 @@ class ReportService:
                     ai_analysis = MedicalReportAnalysis.model_validate_json(
                         json_string_to_parse
                     )
+                    ai_analysis.user_id = report.user_id
                     ReportRepository.populate_report(
                         db=db,
                         report_id=report.id,
                         title=ai_analysis.title,
                         description=ai_analysis.summary,
                         status=ReportStatus.COMPLETED,
+                    )
+                    vector_storage_service.embed_content_for_retrieval(
+                        report=ai_analysis,
+                        title=ai_analysis.title,
                     )
                     logger.info(
                         f"Gemini AI analysis parsed successfully. Title: '{ai_analysis.title}'"
@@ -152,7 +159,6 @@ class ReportService:
         )
 
         await cls.analyze_image_with_ai(
-            genai_client=client,
             genai_model_name=settings.GOOGLE_GENAI_MODEL,
             image_data=image,
             report=report,

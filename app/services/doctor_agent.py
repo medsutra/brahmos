@@ -1,7 +1,6 @@
 from app.config import settings
-from google import genai
-
-client = genai.Client(api_key=settings.GOOGLE_GENAI_API_KEY)
+from app.utils.common.return_as_function import returns_a_function_decorator
+from .llm_client import ai_client
 
 
 class DoctorAgent:
@@ -50,7 +49,7 @@ class DoctorAgent:
 
     @classmethod
     def analyze_report(cls, image_data):
-        return client.models.generate_content(
+        return ai_client.models.generate_content(
             model=settings.GOOGLE_GENAI_MODEL,
             contents=[cls.prompt, image_data],
         )

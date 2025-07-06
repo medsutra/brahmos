@@ -1,5 +1,6 @@
 from app.query_models.report import ReportStatus
 from ..models.report import Report
+from ..schemas.report import Report as ReportSchema
 
 
 class ReportRepository:
@@ -13,7 +14,7 @@ class ReportRepository:
         db.add(report)
         db.commit()
         db.refresh(report)
-        return report
+        return ReportSchema.model_validate(report)
 
     @classmethod
     def set_report_failed(cls, db, report_id):
