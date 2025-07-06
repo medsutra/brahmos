@@ -8,7 +8,7 @@ Follow these steps to set up and run the backend locally.
 
 ### Prerequisites
 
-* Python 3.9+
+* Python 3.11+
 * `pip` (Python package installer)
 
 ### Setup
