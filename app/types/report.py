@@ -1,3 +1,4 @@
+import datetime
 from typing import Optional
 from pydantic import BaseModel, Field
 
@@ -24,4 +25,6 @@ class MedicalReportAnalysis(BaseModel):
         ...,
         description="Vector data representation of the medical report, used for similarity search and retrieval.",
     )
+    conclusion: str = Field(..., description="Shows a one line conclusion")
+    report_date: datetime.datetime = datetime.datetime.now()
     user_id: Optional[str] = None
