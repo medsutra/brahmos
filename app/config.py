@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     GOOGLE_GENAI_EMBEDDING_MODEL: str = os.getenv("GOOGLE_GENAI_EMBEDDING_MODEL", "")
     VECTOR_STORAGE_URL: str = os.getenv("VECTOR_STORAGE_URL", "")
     VECTOR_SIZE: int = int(os.getenv("VECTOR_SIZE", 768))
+    VECTOR_STORAGE_API_KEY: str = os.getenv("VECTOR_STORAGE_API_KEY", "")
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

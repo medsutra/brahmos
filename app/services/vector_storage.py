@@ -11,7 +11,9 @@ import uuid
 class VectorStorageService:
 
     def __init__(self) -> None:
-        self.vector_storage_client = QdrantClient(settings.VECTOR_STORAGE_URL)
+        self.vector_storage_client = QdrantClient(
+            url=settings.VECTOR_STORAGE_URL, api_key=settings.VECTOR_STORAGE_API_KEY
+        )
         try:
             self.vector_storage_client.get_collection(
                 collection_name=settings.COLLECTION_NAME
