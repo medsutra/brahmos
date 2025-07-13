@@ -5,3 +5,4 @@ class ReportStatus(Enum):
     PROCESSING = "PROCESSING"
     COMPLETED = "COMPLETED"
     FAILED = "FAILED"
+    DELETED = "DELETED"

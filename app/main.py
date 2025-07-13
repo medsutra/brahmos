@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.logging_config import configure_logging
 
 from .routes.report import router as report_router
+from .routes.chat import router as chat_router
 from .database import Base, engine
 
 configure_logging()
@@ -30,3 +31,4 @@ app.add_middleware(
 
 
 app.include_router(router=report_router)
+app.include_router(router=chat_router)

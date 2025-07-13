@@ -2,10 +2,10 @@ import uuid
 from sqlalchemy import Column, String, Text
 from app.query_models.report import ReportStatus
 from ..utils.db.enum_decorator import EnumType
-from ..database import Base
+from .base import BaseModel
 
 
-class Report(Base):
+class Report(BaseModel):
     __tablename__ = "REPORTS"
 
     id = Column(

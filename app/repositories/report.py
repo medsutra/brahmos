@@ -31,8 +31,24 @@ class ReportRepository:
         return db.query(Report).filter(Report.id == report_id).first()
 
     @classmethod
+    def get_reports_by_title(cls, db, title, user_id):
+        reports = db.query(Report).filter(
+            Report.title.icontains(title),
+            Report.status.is_not(ReportStatus.DELETED),
+            Report.user_id == user_id,
+        )
+        return list(map(lambda report: ReportSchema.model_validate(report), reports))
+
+    @classmethod
     def get_reports_by_user_id(cls, db, user_id):
-        return db.query(Report).filter(Report.user_id == user_id).all()
+        reports = (
+            db.query(Report)
+            .filter(
+                Report.user_id == user_id, Report.status.is_not(ReportStatus.DELETED)
+            )
+            .all()
+        )
+        return list(map(lambda report: ReportSchema.model_validate(report), reports))
 
     @classmethod
     def populate_report(
@@ -62,8 +78,9 @@ class ReportRepository:
     def delete_report(cls, db, report_id):
         report = cls.get_report_by_id(db, report_id)
         if report:
-            db.delete(report)
+            report.status = ReportStatus.DELETED
             db.commit()
+            db.refresh(report)
             return True
         return False
 

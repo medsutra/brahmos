@@ -1,7 +1,7 @@
 import asyncio
 import json
 import re
-from typing import Optional
+from typing import List, Optional
 from fastapi.concurrency import run_in_threadpool
 from PIL import Image
 from io import BytesIO
@@ -99,14 +99,30 @@ class ReportService:
             ReportRepository.set_report_failed(db=db, report_id=report.id)
 
     @classmethod
-    async def upload_report(cls, db: Session, file: UploadFile) -> Report:
+    async def get_reports(cls, db: Session, user_id: str) -> List[Report]:
+        return ReportRepository.get_reports_by_user_id(db=db, user_id=user_id)
+
+    @classmethod
+    async def get_reports_by_title(
+        cls, db: Session, title: str, user_id: str
+    ) -> List[Report]:
+        return ReportRepository.get_reports_by_title(
+            title=title, db=db, user_id=user_id
+        )
+
+    @classmethod
+    async def delete_report(cls, db, report_id):
+        return ReportRepository.delete_report(db=db, report_id=report_id)
+
+    @classmethod
+    async def upload_report(cls, db: Session, file: UploadFile, user_id: str) -> Report:
         file_content = await file.read()
 
         image = Image.open(BytesIO(file_content))
 
         report = ReportRepository.add_report(
             db=db,
-            user_id="default_user_id",
+            user_id=user_id,
         )
 
         asyncio.create_task(

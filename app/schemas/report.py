@@ -1,10 +1,10 @@
 from typing import Optional
-from pydantic import BaseModel
 
 from app.query_models.report import ReportStatus
+from app.schemas.base import BaseSchema
 
 
-class Report(BaseModel):
+class Report(BaseSchema):
     id: str
     user_id: str
     status: ReportStatus

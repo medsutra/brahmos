@@ -1,5 +1,6 @@
 from typing import Dict, List, Optional
 from app.config import settings
+from app.query_models.message import MessageOwner
 from app.types.report import MedicalReportAnalysis
 from app.utils.common.return_as_function import returns_a_function_decorator
 from .llm_client import ai_client
@@ -101,12 +102,17 @@ class DoctorAgent:
         Returns:
             A string containing the doctor's conversational response.
         """
+
+        print(chat_history)
+
         formatted_chat_history = ""
         if chat_history:
             for message in chat_history:
-                role_display = "User" if message.get("role") == "user" else "Doctor"
+                role_display = (
+                    "User" if message.get("owner") == MessageOwner.USER else "Doctor"
+                )
                 formatted_chat_history += (
-                    f"{role_display}: {message.get('content', '')}\n"
+                    f"{role_display}: {message.get('message', '')}\n"
                 )
 
         retrieved_reports_context = "No relevant previous reports found for this query."
@@ -121,7 +127,6 @@ class DoctorAgent:
 
         if retrieved_reports:
             print(f"Found {len(retrieved_reports)} relevant reports.")
-            # Format retrieved reports into a string for the LLM prompt
             report_strings = []
             for i, report in enumerate(retrieved_reports):
                 report_strings.append(

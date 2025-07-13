@@ -62,19 +62,22 @@ class VectorStorageService:
         if vector is None:
             return
 
-        points = PointStruct(
+        point = PointStruct(
             id=str(uuid.uuid4()),
             payload=report.model_dump(),
             vector=vector,
         )
 
         self.vector_storage_client.upsert(
-            collection_name=settings.COLLECTION_NAME, points=[points]
+            collection_name=settings.COLLECTION_NAME, points=[point]
         )
 
     async def search_reports(
         self, user_id: str, query: str, limit: int = 5
     ) -> List[MedicalReportAnalysis]:
+
+        # Are my kidneys normal?
+
         """
         Searches for relevant medical reports for a specific user based on a query.
 
